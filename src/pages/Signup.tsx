@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 type Loved = { name: string; email: string; mobile: string }
 
 export default function Signup(){
-  const { signup } = useAuth()
+  const { signup, loginWithGithub, loginWithGoogle, updateLovedOnes, user } = useAuth()
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -18,7 +18,36 @@ export default function Signup(){
     e.preventDefault()
     setError(null)
     if (!agree) { setError('Please agree to the consent terms to continue.'); return }
-    try { await signup(email, password, name || username || email) } catch (e:any){ setError(e.message) }
+  try { await signup(email, password, name || username || email) } catch (e:any){ setError(e?.message || String(e)) }
+  }
+
+  async function onGithubSignup(){
+    setError(null)
+    if (!agree) { setError('Please agree to the consent terms to continue.'); return }
+    try {
+      await loginWithGithub()
+      // After auth state updates, persist loved ones captured in form (if any)
+      const mapped = loved
+        .filter(l => l.name || l.mobile)
+        .map(l => ({ name: l.name || l.email || 'Loved One', whatsapp: l.mobile || '' }))
+      if (mapped.length) updateLovedOnes(mapped)
+    } catch (e:any){
+      setError(e?.message || 'GitHub sign-up failed')
+    }
+  }
+
+  async function onGoogleSignup(){
+    setError(null)
+    if (!agree) { setError('Please agree to the consent terms to continue.'); return }
+    try {
+      await loginWithGoogle()
+      const mapped = loved
+        .filter(l => l.name || l.mobile)
+        .map(l => ({ name: l.name || l.email || 'Loved One', whatsapp: l.mobile || '' }))
+      if (mapped.length) updateLovedOnes(mapped)
+    } catch (e:any){
+      setError(e?.message || 'Google sign-up failed')
+    }
   }
 
   return (
@@ -62,6 +91,14 @@ export default function Signup(){
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <button className="w-full btn btn-primary" disabled={!agree}>Create account</button>
+        <div className="my-4 flex items-center gap-3">
+          <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"/>
+          <span className="text-xs text-slate-500 dark:text-slate-400">or</span>
+          <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"/>
+        </div>
+  <button type="button" onClick={onGithubSignup} className="w-full px-3 py-2 rounded-xl border btn-outline">Sign up with GitHub</button>
+  <div className="h-2"/>
+  <button type="button" onClick={onGoogleSignup} className="w-full px-3 py-2 rounded-xl border btn-outline">Sign up with Google</button>
         <p className="text-xs text-slate-500 dark:text-slate-400">This is a demo — not a medical device. For emergencies in India, call 112 or visit the Ministry of Health resources.</p>
       </form>
     </div>

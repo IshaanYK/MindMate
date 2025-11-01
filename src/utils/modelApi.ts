@@ -15,13 +15,11 @@ export type SentimentScores = {
 }
 
 function getEnv(name: string): string | undefined {
-  // Prefer Vite env, then CRA env
+  // Prefer Vite env, then CRA env (via globalThis to avoid Node typings)
   const vite = (import.meta as any)?.env?.[name]
   if (vite != null) return vite
-  // CRA
-  if (typeof process !== 'undefined' && (process as any)?.env) {
-    return (process as any).env[name]
-  }
+  const procEnv = (globalThis as any)?.process?.env
+  if (procEnv && typeof procEnv === 'object') return procEnv[name]
   return undefined
 }
 
@@ -114,7 +112,7 @@ export async function analyzeSentiment(text: string): Promise<{ label: Sentiment
   const token = getEnv('VITE_HF_TOKEN') || getEnv('REACT_APP_HF_TOKEN')
 
   try {
-    const app = await client(base, token ? { hf_token: token } : undefined)
+  const app = await client(base, token ? { token: token as `hf_${string}` } : undefined)
     // Try the common endpoint name; adjust if your Space uses a different fn
     const resp = await app.predict('/predict', [text]) as any
     const raw = Array.isArray(resp?.data) ? resp.data[0] : (resp?.data ?? resp)

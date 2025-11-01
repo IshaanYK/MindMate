@@ -42,7 +42,7 @@ export default function NatureScene(){
       <Canvas camera={{ position: [2, 1.6, 2.2], fov: 50 }}>
         <ambientLight intensity={0.8} />
         <directionalLight position={[3, 5, 2]} intensity={1.1} castShadow />
-        <Sky elevation={15} turbidity={4} rayleigh={2} mieCoefficient={0.004} mieDirectionalG={0.9} />
+  <Sky sunPosition={[0, 1, 0]} turbidity={4} rayleigh={2} mieCoefficient={0.004} mieDirectionalG={0.9} />
         <SwayingTree />
         <Ground />
         <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.4} />

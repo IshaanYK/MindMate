@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MindMate – Calming Chat (Gemini)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🌿 MindMate · Calming Chat</div>
+    <div class="apikey">
+      <label>Gemini API key</label>
+      <input id="apiKey" type="password" placeholder="Enter GOOGLE_API_KEY" />
+      <button id="saveKey">Save</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="messages" class="messages"></div>
+
+    <div id="typing" class="typing hidden">MindMate is typing…</div>
+
+    <div class="composer">
+      <input id="text" type="text" placeholder="Share what's on your mind…" />
+      <button id="send">Send</button>
+    </div>
+
+    <div class="quick">
+      <button class="chip" data-t="Can you guide me a 1-minute box breathing?">Box breathing (1‑min)</button>
+      <button class="chip" data-t="Can you walk me through a 5-4-3-2-1 grounding exercise?">5‑4‑3‑2‑1 grounding</button>
+      <button class="chip" data-t="I'm feeling overwhelmed. Help me slow down.">Feeling overwhelmed</button>
+    </div>
+
+    <p class="disclaimer">This supportive chat is not medical care. If you’re in immediate danger in India, call <b>112</b>. You can also reach KIRAN: <b>1800‑599‑0019</b> (24×7), AASRA: <b>+91‑22‑27546669</b>, Vandrevala: <b>+91‑9999‑666‑555</b>.</p>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

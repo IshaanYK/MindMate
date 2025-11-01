@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login(){
-  const { login } = useAuth()
+  const { login, loginWithGithub, loginWithGoogle } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string| null>(null)
@@ -10,7 +10,7 @@ export default function Login(){
   async function onSubmit(e: React.FormEvent){
     e.preventDefault()
     setError(null)
-    try { await login(email, password) } catch (e:any){ setError(e.message) }
+    try { await login(email, password) } catch (e:any){ setError(e?.message || String(e)) }
   }
 
   return (
@@ -22,8 +22,22 @@ export default function Login(){
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <button className="w-full btn btn-primary">Continue</button>
       </form>
+      <div className="my-4 flex items-center gap-3">
+        <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"/>
+        <span className="text-xs text-slate-500 dark:text-slate-400">or</span>
+        <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"/>
+      </div>
+      <button onClick={async()=>{
+        setError(null)
+        try { await loginWithGithub() } catch (e:any){ setError(e.message || 'GitHub sign-in failed') }
+      }} className="w-full px-3 py-2 rounded-xl border btn-outline">Continue with GitHub</button>
+      <div className="h-2"/>
+      <button onClick={async()=>{
+        setError(null)
+        try { await loginWithGoogle() } catch (e:any){ setError(e.message || 'Google sign-in failed') }
+      }} className="w-full px-3 py-2 rounded-xl border btn-outline">Continue with Google</button>
       <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">
-        Demo only — do not use real passwords. Authentication can be swapped to Firebase later.
+        You can use email demo login above or continue with GitHub (via Firebase).
       </p>
     </div>
   )
