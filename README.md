@@ -1,4 +1,4 @@
-# MindMate — Nature Theme + Dark Mode
+# MindMate
 
 - Nature color system (forest/moss/mint) with subtle glass UI
 - Dark mode via class strategy + system preference + toggle
